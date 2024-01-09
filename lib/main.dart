@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_order_app/screens/MenuPage.dart';
-import 'package:my_order_app/screens/cartPage.dart';
+import 'package:my_order_app/screens/menupage.dart';
+import 'package:my_order_app/screens/cartpage.dart';
 import 'package:my_order_app/screens/intropage.dart';
 import 'package:provider/provider.dart';
 import 'package:my_order_app/models/shop.dart';
@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
         '/intropage': (context) => const IntroPage(),
         '/menupage': (context) => const MenuPage(),
         '/cartpage':(context) => const CartPage()
+        
       },
     );
   }

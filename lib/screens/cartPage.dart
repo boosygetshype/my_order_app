@@ -6,22 +6,72 @@ import 'package:provider/provider.dart';
 import 'package:my_order_app/models/foods.dart';
 
 class CartPage extends StatelessWidget {
-  const CartPage({super.key});
+  const CartPage({Key? key});
 
   void removeFromCart(Food food, BuildContext context) {
     final shop = context.read<Shop>();
     shop.removeFromCart(food);
+
+    final snackBar = SnackBar(
+      content: Text("Ürün başarıyla silinmiştir."),
+      duration: Duration(seconds: 2),
+      action: SnackBarAction(
+        label: "Geri Al",
+        onPressed: () {
+          shop.addToCart(food); // Ürünü tekrar sepete ekle
+        },
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void createOrder(BuildContext context) {
+    final shop = context.read<Shop>();
+
+    if (shop.cart.isNotEmpty) {
+      shop.clearCart();
+      showSnackbar(context, "Siparişiniz başarıyla oluşturuldu.");
+    } else {
+      showSnackbar(context, "Lütfen önce sepete ürün ekleyiniz.");
+    }
+  }
+
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<Shop>(
       builder: (context, value, child) => Scaffold(
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.blueGrey[300],
         appBar: AppBar(
-          title: const Text("Sepetim"),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/menupage");
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.blueGrey[100],
+              size: 30,
+            ),
+          ),
+          title: Text(
+            "Sepetim",
+            style: TextStyle(
+              color: Colors.blueGrey[100],
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            ),
+          ),
           elevation: 0,
-          backgroundColor: primaryColor,
+          backgroundColor: Colors.blueGrey[300],
         ),
         body: Column(
           children: [
@@ -42,13 +92,16 @@ class CartPage extends StatelessWidget {
                       title: Text(
                         foodName,
                         style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(
                         foodPrice,
                         style: TextStyle(
-                            color: Colors.grey[200],
-                            fontWeight: FontWeight.bold),
+                          color: Colors.grey[200],
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       trailing: IconButton(
                         color: Colors.grey[200],
@@ -66,10 +119,9 @@ class CartPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(25.0),
               child: GestureDetector(
-                onTap: () {},
                 child: MyButton(
+                  onTap: () => createOrder(context),
                   text: "Sipariş Oluştur",
-                  onTap: () {},
                 ),
               ),
             )
@@ -79,5 +131,3 @@ class CartPage extends StatelessWidget {
     );
   }
 }
-
-// deneme

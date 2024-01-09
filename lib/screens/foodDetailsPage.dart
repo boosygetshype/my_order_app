@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class FoodDetailsPage extends StatefulWidget {
   final Food food;
-  const FoodDetailsPage({super.key, required this.food});
+  const FoodDetailsPage({Key? key, required this.food});
 
   @override
   State<FoodDetailsPage> createState() => _FoodDetailsPageState();
@@ -16,6 +16,7 @@ class FoodDetailsPage extends StatefulWidget {
 
 class _FoodDetailsPageState extends State<FoodDetailsPage> {
   int quantityCount = 0;
+
   void decrementQuantity() {
     setState(() {
       if (quantityCount > 0) {
@@ -42,8 +43,10 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           content: const Text(
             "Ürün başarıyla sepete eklendi",
             style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+              color: Colors.white,
+              fontSize: 22,
+            ),
+            textAlign: TextAlign.left,
           ),
           actions: [
             IconButton(
@@ -51,12 +54,27 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                 Navigator.pop(context);
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.done),
+              icon: const Icon(
+                Icons.done,
+                size: 30,
+              ),
             ),
           ],
         ),
       );
+    } else {
+      // Eğer ürün seçilmemişse Snackbar göster
+      showSnackbar(context, "Önce sepete eklenecek ürün sayısını seçin");
     }
+  }
+
+  void showSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -115,7 +133,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
                     height: 10,
                   ),
                   Text(
-                    "Hafif ve lezzetli bir mola arıyorsanız, Latte Frappe tam size göre! İnce öğütülmüş kaliteli kahve, taze süt ve mükemmel oranda buz ile hazırlanan bu serinletici içecek, sıcak günlerde enerji dolu bir ferahlık sunuyor. İçeriğindeki özel karışım sayesinde yoğun bir kahve keyfi yaşayacak, gününüzü renklendireceksiniz. Kendi damak zevkinize göre şeker ve süslemeler ekleyerek Latte Frappe'yi kişiselleştirin. Hemen deneyin, lezzetin tadını çıkarın!",
+                    widget.food.description,
                     style: TextStyle(
                         color: Colors.grey[600], fontSize: 14, height: 2),
                   ),
@@ -125,7 +143,7 @@ class _FoodDetailsPageState extends State<FoodDetailsPage> {
           ),
           Container(
             color: primaryColor,
-            padding: EdgeInsets.all(25),
+            padding: const EdgeInsets.all(25),
             child: Column(
               children: [
                 Row(

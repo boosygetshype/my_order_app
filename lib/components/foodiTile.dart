@@ -14,7 +14,7 @@ class FoodTile extends StatelessWidget {
       onTap: onTap ,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: Colors.blueGrey[100],
           borderRadius: BorderRadius.circular(20),
         ),
         margin: const EdgeInsets.only(left: 25, right: 25),

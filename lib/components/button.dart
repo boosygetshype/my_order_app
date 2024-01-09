@@ -20,9 +20,9 @@ class MyButton extends StatelessWidget {
           children: [
             Text(
               text,
-              style: const TextStyle(color: Colors.white),
+              style:  TextStyle(color: Colors.blueGrey[100], fontWeight: FontWeight.bold, fontSize: 20),
             ),
-            const Icon(Icons.arrow_forward, color: Colors.white,)
+             Icon(Icons.arrow_forward, color: Colors.blueGrey[100],size: 30,)
           ],
         ),
       ),

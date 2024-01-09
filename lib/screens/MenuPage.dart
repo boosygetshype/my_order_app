@@ -1,23 +1,47 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_order_app/components/button.dart';
-import 'package:my_order_app/components/foodiTile.dart';
+import 'package:my_order_app/components/fooditile.dart';
 import 'package:my_order_app/models/shop.dart';
-import 'package:my_order_app/screens/foodDetailsPage.dart';
-import 'package:my_order_app/themes/colors.dart';
+import 'package:my_order_app/screens/fooddetailspage.dart';
 import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  _MenuPageState createState() => _MenuPageState();
 }
 
 class _MenuPageState extends State<MenuPage> {
-// menu
+  late DateTime now;
+  late String formattedDate;
+  late String formattedTime;
 
-// Yemek detayı sayfasına navigate
+  @override
+  void initState() {
+    super.initState();
+    updateDateTime(); 
+    startTimer();  
+  }
+
+  void updateDateTime() {
+    now = DateTime.now();
+    formattedDate = "${now.day}.${now.month}.${now.year}";
+    formattedTime = "${now.hour}:${now.minute}";
+  }
+
+  
+  void startTimer() {
+    Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        updateDateTime();  
+      });
+    });
+  }
+
+  
   void navigateToFoodDetails(int index) {
     final shop = context.read<Shop>();
     final foodMenu = shop.foodMenu;
@@ -34,28 +58,23 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String formattedDate = "${now.day}.${now.month}.${now.year}";
-    String formattedTime = "${now.hour}:${now.minute}";
+    final shop = context.watch<Shop>();
 
-    final shop = context.read<Shop>();
-    final foodMenu = shop.foodMenu;
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.blueGrey[300],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.grey[800],
         elevation: 0,
-        leading: Icon(
-          Icons.menu,
-          color: Colors.grey[900],
-        ),
+     
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/cartpage');
-              },
-              icon: const Icon(Icons.shopping_cart))
+            onPressed: () {
+              Navigator.pushNamed(context, '/cartpage');
+            },
+            icon: const Icon(Icons.shopping_cart),
+          ),
         ],
         centerTitle: true,
         title: Text(
@@ -70,7 +89,7 @@ class _MenuPageState extends State<MenuPage> {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: primaryColor,
+              color: Colors.blueGrey[100],
               borderRadius: BorderRadius.circular(20),
             ),
             margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -84,7 +103,7 @@ class _MenuPageState extends State<MenuPage> {
                     Text(
                       "Yeni yıla özel gelenler",
                       style: GoogleFonts.dmSerifDisplay(
-                          fontSize: 20, color: Colors.white),
+                          fontSize: 20, color: Colors.black87),
                     ),
                     const SizedBox(height: 20),
                     MyButton(
@@ -101,11 +120,13 @@ class _MenuPageState extends State<MenuPage> {
                   ],
                 ),
                 Expanded(
-                  child: Column(children: [
-                    Image.asset(
-                      "lib/images/image_6.png",
-                    ),
-                  ]),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "lib/images/image_6.png",
+                      ),
+                    ],
+                  ),
                 )
               ],
             ),
@@ -147,9 +168,9 @@ class _MenuPageState extends State<MenuPage> {
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: foodMenu.length,
+              itemCount: shop.foodMenu.length,
               itemBuilder: (context, index) => FoodTile(
-                food: foodMenu[index],
+                food: shop.foodMenu[index],
                 onTap: () => navigateToFoodDetails(index),
               ),
             ),
@@ -159,7 +180,7 @@ class _MenuPageState extends State<MenuPage> {
           ),
           Container(
             decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Colors.blueGrey[100],
                 borderRadius: BorderRadius.circular(20)),
             margin: const EdgeInsets.only(left: 25, right: 25, bottom: 25),
             padding: const EdgeInsets.all(20),
